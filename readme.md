@@ -9,13 +9,13 @@
 [size-img]: https://packagephobia.now.sh/badge?p=Name
 [size]: https://packagephobia.now.sh/result?p=Name
 
-「 desc 」
+「 让我们用 Rust 搞个 web service 和 client ，用[Iron]和[Hyper]  」
 
 [中文](./readme.md) | [english](https://github.com/brson/httptest)
 
 ---
 
-## 校对 🀄️
+## 校对 ✅
 
 <!-- doc-templite START generated -->
 <!-- repo = 'brson/httptest' -->
@@ -48,30 +48,30 @@
 
 # 让我们用 Rust 搞个 web service 和 client
 
-所以我正在研究这个项目[弹坑]做的[锈]回归测试.研究在 Rust 中编写部件的可行性.我需要一个能说 JSON 的 HTTP 服务器以及相应的客户端.我没有看到很多关于如何做到这一点的文档,所以我正在记录我的调查.
+所以我正在研究这个项目[Crater]做的[Rust]回归测试。研究在 Rust 中编写部件的可行性。我需要一个能说 JSON 的 HTTP 服务器，以及相应的客户端。我没有看到很多关于如何做到这一点的文档，所以我在这里记录我的调查。
 
-我打算用[铁]和[超],我都没有经历过.
+我打算用[Iron]和[Hyper]，都没有用过.
 
-此仓库中的每个提交都对应一个章节,因此如果您愿意,请跟随.
+此仓库中的每个提交都对应一个章节，因此如果您愿意,请跟随.
 
-**编辑:内部的一些不准确![Thanks /r/rust!](http://www.reddit.com/r/rust/comments/33k1yn/lets_make_a_web_service_and_client/)**
+**请编辑: 当内部不准确! [Thanks /r/rust!](http://www.reddit.com/r/rust/comments/33k1yn/lets_make_a_web_service_and_client/)**
 
-# 1. Preparing to serve some JSON
+# 1. 准备服务一些 JSON
 
-我首先要求 Cargo 给我一个名为'httptest'的新可执行项目.通过`--bin`说要创建一个源文件`src/main.rs`这将被编译到一个应用程序.
+我首先要求 Cargo 给我一个名为'httptest'的新可执行项目。传递`--bin`，创建一个源文件`src/main.rs`，终会被编译到一个应用程序(二进制)。
 
 ```text
 $ cargo new httptest --bin
 ```
 
-我会用的[铁]对于服务器,请按照其文档中的说明将以下内容添加到我的`Cargo.toml`文件.
+我会用[Iron]作为服务器(框架),请按照对应文档中的说明，将以下内容添加到我的`Cargo.toml`文件.
 
 ```toml
 [dependencies]
 iron = "*"
 ```
 
-然后进入`main.rs`我只是复制他们的例子.
+然后进入`main.rs`，只是复制他们的例子.
 
 ```rust
 extern crate iron;
@@ -89,7 +89,7 @@ fn main() {
 }
 ```
 
-并输入`cargo build`.
+然后，输入`cargo build`.
 
 ```text
 $ cargo build
@@ -98,27 +98,27 @@ Compiling iron v0.1.16
 Compiling httptest v0.2.0 (file:///opt/dev/httptest)
 ```
 
-迄今为止取得了成功.该死的,Rust 很顺利.让我们尝试运行服务器`cargo run`.
+迄今为止，要取得了成功哦。喔呼，Rust 超爽快的。让我们尝试运行服务器`cargo run`.
 
 ```text
 $ cargo run
 Running `target/debug/httptest`
 ```
 
-我坐在这里等待一段时间,期待它打印"On 3000",但它永远不会.货物必须捕获输出.让我们看看我们是否正在服务.
+我坐在这里等待一段时间，期待它打印"On 3000"，但它永远不会打印。Cargo 要捕获输出，以此让我们看看我们是否正在服务。
 
 ```text
 $ curl http://localhost:3000
 Hello World!
 ```
 
-哦,那太酷了.我们现在知道如何构建 Web 服务器.良好的起点.
+哦,酷。我们现在知道如何构建 Web 服务器。良好的起点。
 
-# 2. Serving a struct as JSON
+# 2. 让我们把 结构 变为 JSON
 
-是[rustc 序列化-]仍然是转换为 JSON 和从 JSON 转换的最简单方法?也许我应该用[serde],但那你真的想要[serde_macros],但这只适用于 Rust nightlies.我应该只使用夜莺吗?没有其他人需要使用它.
+[rustc-serialize]仍然是转换为 JSON 和，从 JSON 转换的最简单方法? 也许我应该用[serde]，若你真的想要[serde_macros]的话，但这只适用于 Rust 每晚版本。我应该只使用每晚版本吗? 没有其他人需要使用它。
 
-让我们继续尝试真实的 rustc-serialize.现在我的 Cargo.toml'依赖关系'部分如下所示.
+让我们继续尝试真实的 rustc-serialize。现在我的 Cargo.toml 的'依赖关系(dependencies)'部分如下所示.
 
 ```toml
 [dependencies]
@@ -126,7 +126,7 @@ iron = "*"
 rustc-serialize = "*"
 ```
 
-基于[rustc-serialize docs](https://doc.rust-lang.org/rustc-serialize/rustc_serialize/json/index.html)我更新`main.rs`看起来像这样:
+基于[rustc-serialize 文档](https://doc.rust-lang.org/rustc-serialize/rustc_serialize/json/index.html)，我更新了`main.rs`，看起来像这样:
 
 ```rust
 extern crate iron;
@@ -153,7 +153,7 @@ fn main() {
 }
 ```
 
-然后跑`cargo build`.
+然后，`cargo build`.(以下错误，源自我的失误，上面例子是对的)
 
 ```text
 $ cargo build
@@ -173,34 +173,32 @@ Could not compile `httptest`.
 To learn more, run the command again with --verbose.
 ```
 
-很多新的依赖现在.但是一个错误.[`Response::with`](http://ironframework.io/doc/iron/response/struct.Response.html#method.with)有这个定义:
+现在又多了很多新依赖，但，有一个[`Response::with`](http://ironframework.io/doc/iron/response/struct.Response.html#method.with)错误出来:
 
 ```rust
 fn with<M: Modifier<Response>>(m: M) -> Response
 ```
 
-我不知道是什么`Modifier`是.[Some
-docs](http://ironframework.io/doc/iron/modifiers/index.html)没有帮助.我不知道该怎么做但我注意到原来的例子传递了一个元组`Response::with`而我的更新处理`Response::with`作为两个参数.似乎元组是一个`Modifier`.
+我不知道`Modifier`是什么。[查查文档](http://ironframework.io/doc/iron/modifiers/index.html)也没有帮助。我不知道该怎么做，但我注意到原来的例子传递了一个元组给`Response::with`，而我新的`Response::with`处理，则有两个参数。似乎元组是一个`Modifier`.
 
-将元组添加到`Ok(Response::with((status::Ok, payload)))`, 执行`cargo run`,卷曲一些 JSON.
+将元组添加到`Ok(Response::with((status::Ok, payload)))`, 再执行`cargo run`, curl 一些 JSON.
 
 ```
 $ curl http://localhost:3000
 {"msg":"Hello, World"}
 ```
 
-布拉姆!我们正在发送 JSON.是时候休息一下了.
+Boom! 我们正在发送 JSON。是时候加上另一些'佐料'了.
 
-# 3. Routes
+# 3. 路由
 
-接下来我想发布一些 JSON,但在我这样做之前,我需要一个合适的 URL 来发布,所以我想我需要学习如何设置路由.
+接下来我想 POST 一些 JSON，但在我这样做之前，我需要一个合适的 URL 来 POST，所以我想我需要学习如何设置路由。
 
-我看着铁[docs](http://ironframework.io/doc/iron/)并且在正文中没有看到任何明显的东西,但是有一个叫做的箱子[router](http://ironframework.io/doc/router/index.html)这可能很有趣.
+我看着 Iron 的[文档](http://ironframework.io/doc/iron/)，并且在正文中没有看到任何明显的东西，但是有一个叫做[router](http://ironframework.io/doc/router/index.html)的箱子，可能很有趣。
 
-模块文档是"`Router`为 Iron 提供了快速灵活的路由,但其他并不多.我如何使用?!`Router`在我发现很多侦探之后.[an
-example](https://github.com/iron/router/blob/master/examples/simple.rs)好吧,让我们试着让它适应我们不断发展的实验.
+它的模块文档，说明了"`Router`为 Iron 提供了快速灵活的路由"，但其他内容并不多。我如何使用`Router`?! 在我做了很多侦探工作之后，我发现了[一个示例](https://github.com/iron/router/blob/master/examples/simple.rs)好吧,让我们试着让它适应我们不断发展的实验。
 
-我加`router = "*"`对我`Cargo.toml` `[dependencies]`开始写作.以下是我在阅读 POST 数据之前想到的.
+我加`router = "*"`到`Cargo.toml`的 `[dependencies]`部分，然后开始写作。以下是我在阅读 POST 数据之前，想到的。
 
 ```rust
 extern crate iron;
@@ -242,14 +240,13 @@ fn main() {
 }
 ```
 
-这种用途`Router`控制处理程序调度.它构建并仍然响应`curl http://localhost:3000`但是`/set`路由尚未实现.
+这使用了`Router`来控制，处理程序调度。它构建后，仍会响应`curl http://localhost:3000`，但是`/set`路由并没有真正实现。
 
-现在将 POST 正文读入字符串.这个[docs for
-`Request`](http://ironframework.io/doc/iron/request/struct.Request.html)说说这一领域`body`是一个迭代器,因此我们只需要将该迭代器收集到一个字符串中.
+现在将 POST body 读入字符串。这个[`Request`的文档](http://ironframework.io/doc/iron/request/struct.Request.html)说这`body`字段是一个迭代器，因此我们只需要将该迭代器收集到一个字符串中。
 
-我第一次尝试`let payload = request.body.read_to_string();`因为我知道它曾经有效.
+我第一次尝试`let payload = request.body.read_to_string();`因为我知道它曾经有效过。
 
-它不起作用.
+但现在没有了。
 
 ```text
 $ cargo build
@@ -265,9 +262,9 @@ Could not compile `httptest`.
 To learn more, run the command again with --verbose.
 ```
 
-我厌恶地举起双手.为什么这个方法不再存在?拉斯特队总是捉弄我们!然后,我注意到编译器在一定程度上已经解释了方法的存在,并且我应该导入`std::io::Read`.
+我厌恶地举起双手(屏蔽)。为什么这个方法不再存在?! Rust 团队总是捉弄我们! 但,我注意到编译器在一定程度上已经解释了方法的存在，并告诉我应该导入`std::io::Read`。
 
-我添加导入并发现`read_to_string`我的行为与我想象的不同.
+我添加导入`read_to_string`并发现其行为与我想象的不同.
 
 ```text
 101 $ cargo build
@@ -277,10 +274,10 @@ src/main.rs:30         let payload = request.body.read_to_string();
                                                   ^~~~~~~~~~~~~~~~
 ```
 
-好的,是的`Read::read_to_string`现在是`fn read_to_string(&mut self, buf: &mut String) -> Result<usize, Error>`从而提供缓冲区并处理错误.重写`set_greeting`方法.
+好吧，现在`Read::read_to_string`的函数签名是`fn read_to_string(&mut self, buf: &mut String) -> Result<usize, Error>`，以此来提供缓冲区并处理错误。重写`set_greeting`方法.
 
 ```rust
-    // Receive a message by POST and play it back.
+    // 接收一个来自POST的信息，并使其返回
     fn set_greeting(request: &mut Request) -> IronResult<Response> {
         let mut payload = String::new();
         request.body.read_to_string(&mut payload).unwrap();
@@ -298,13 +295,13 @@ $ curl -X POST -d '{"msg":"Just trust the Rust"}' http://localhost:3000/set
 {"msg":"Just trust the Rust"}
 ```
 
-哦,锈.你太糟糕了.
+哦，Rust，终于好了。你太烦了.
 
-# 4. Mutation
+# 4. 变一变
 
-嘿,这些我都知道`.unwrap()`S 是错的.我不在乎.我们正在做原型.
+是的，我知道所有`.unwrap()`们很糟糕。但我不在乎。我们正在做原型.
 
-在我们继续编写客户端之前,我想修改这个玩具示例,以便在 POST 上存储一些状态`/set`以后再报告.我会做的`greeting`本地的,在一些闭包中捕获它,然后查看编译器如何抱怨.
+在我们继续编写客户端之前，我想修改这个玩具示例，可在`/set` POST 上存储一些状态，以便以后再使用。我搞出一个本地`greeting`，在一些闭包中捕获它，然后看看编译器有什么抱怨的。
 
 这是我的新`main`函数,在尝试编译之前:
 
@@ -322,7 +319,7 @@ fn main() {
         Ok(Response::with((status::Ok, payload)))
     }
 
-    // Receive a message by POST and play it back.
+    // 接收一个来自POST的信息，并使其返回
     fn set_greeting(request: &mut Request, greeting: &mut Greeting) -> IronResult<Response> {
         let mut payload = String::new();
         request.body.read_to_string(&mut payload).unwrap();
@@ -359,9 +356,9 @@ error: aborting due to 4 previous errors
 Could not compile `httptest`.
 ```
 
-拉斯特克不高兴.但我想不到.我抛出类型只是为了得到响应.告诉我怎么做生锈.
+rustc 很不高兴。我也想到了。但我只是抛出类型，得到个响应。天啊，快告诉我搞定 rustc 吧。
 
-这些错误消息令人困惑,但显然闭包是错误的类型.这个`get`和`post`方法`Router`拿一个[`Handler`](http://ironframework.io/doc/iron/middleware/trait.Handler.html)在 doc 页面中,我看到一个 impl 被定义为
+这些错误消息令人困惑，但显然闭包是个错误类型。这个`Router`的`get`和`post`方法拿一个[`Handler`](http://ironframework.io/doc/iron/middleware/trait.Handler.html)，且从 doc 页面中,我看到一个 impl 被定义为
 
 ```rust
 pub trait Handler: Send + Sync + Any {
@@ -369,9 +366,9 @@ pub trait Handler: Send + Sync + Any {
 }
 ```
 
-一口,但是`Handler`定义为`Fn`不是`FnOnce`或`FnMut`必须如此`Send + Sync`. 因为它需要发送,所以我们不会捕获任何引用,并且由于环境不是可变的,所以我们必须使用内部可变性来改变问候语.所以我要使用可发送的智能指针,`Arc`为了使它可变,将`Mutex`里面.为此,我们需要像这样从标准库中导入两者:`use std::sync::{Mutex, Arc};`. 我还要移动捕获`move |r| ...`避免通过引用捕获.
+真是一口`**`，但是`Handler`定义为`Fn`，而不是`FnOnce`或`FnMut`，且必须为`Send + Sync`。 因为它需要发送(send)，所以我们不会捕获任何引用，并且由于环境不是可变的，所以我们必须使用内部可变性来改变`greeting`。所以我要使用可发送的智能指针，`Arc`，为了使它可变，加个`Mutex`在里面。为此，我们需要像这样从标准库中导入两者:`use std::sync::{Mutex, Arc};`。 我还要移动(move)捕获`move |r| ...`避免通过引用捕获。
 
-像这样更新我的代码会产生相同的错误消息.
+像这样更新我的代码，`MD`，还是会产生相同的错误消息。
 
 ```rust
     let greeting = Arc::new(Mutex::new(Greeting { msg: "Hello, World".to_string() }));
@@ -383,17 +380,19 @@ pub trait Handler: Send + Sync + Any {
     router.post("/set", move |r| set_greeting(r, &mut greeting_clone.lock().unwrap()));
 ```
 
-rustc 不喜欢我关门的日子.为什么?我不知道.我问瑞姆他是否知道该怎么做.
+rustc 不喜欢我闭包的生命周期。为什么? 我不知道。我问 `#rust 的reem`，他是否知道该怎么做。
 
-几个小时后,雷姆说
+几个小时后,reem 说
 
 ```text
 16:02 < reem> brson: Partially hint the type of the request art, rustc has trouble inferring HRTBs
+
+16:02 < reem> brson: 请求(request) art 相关的部分类型, rustc 无法推断出 HRTBs
 ```
 
-HRTB 意味着"更高级别的特征界限",这意味着大致"复杂的寿命".
+HRTB 意味着"更高级别的特征界限(higher-ranked trait bounds)",这也大概意味着"复杂的生命周期"。
 
-我将这些相同的行更改为提示`r: &mut Request`一切正常……
+我将这些相同的行，更改为碰触到`r: &mut Request`，最终一切归于平静……
 
 ```rust
     let greeting = Arc::new(Mutex::new(Greeting { msg: "Hello, World".to_string() }));
@@ -405,9 +404,9 @@ HRTB 意味着"更高级别的特征界限",这意味着大致"复杂的寿命".
     router.post("/set", move |r: &mut Request| set_greeting(r, &mut greeting_clone.lock().unwrap()));
 ```
 
-这似乎是 Rust 的推理器中的一个 bug.那是跛脚的.
+这似乎是 Rust 的推断器中的一个 bug。真蹩脚.
 
-现在它再次构建,所以我们可以用 curl 进行测试.
+现在它再次构建，所以我们可以用 curl 进行测试了.
 
 ```text
 $ curl http://localhost:3000
@@ -417,13 +416,13 @@ $ curl http://localhost:3000
 {"msg":"Just trust the Rust"}
 ```
 
-现在我们正在玩弄权力.
+现在，我们正在掌握'雷电'.
 
-# 5. The client
+# 5. 客户端
 
-我们有一个小 JSON 服务器.现在让我们编写客户端.这次我们将使用[超级]直接.
+我们有了一个小 JSON 服务器。现在让我们编写客户端。这次我们将直接使用[Hyper].
 
-我把它加在我的身上`Cargo.toml`:`hyper = "*"`然后创建`src/bin/client.rs`:
+我把`hyper = "*"`加到`Cargo.toml`身上，然后创建`src/bin/client.rs`:
 
 ```rust
 extern crate hyper;
@@ -431,9 +430,9 @@ extern crate hyper;
 fn main() { }
 ```
 
-源文件`src/bin/`由货物自动构建为可执行文件.跑`cargo build`以及`target/debug/client`程序出现.好,宇宙是理智的.现在找出 Hyper.
+`src/bin/`下的源文件，由 Cargo 自动构建为可执行文件。运行`cargo build`后，执行文件在`target/debug/client`出现。好了，‘老天’赐福。现在找出 Hyper 吧。
 
-趴下[Hyper client example](http://hyperium.github.io/hyper/hyper/client/index.html)我想到了这个片段,它仅请求"/"并打印正文:
+拔下[Hyper 客户端的示例](http://hyperium.github.io/hyper/hyper/client/index.html)，我改了改这个片段，变成仅请求"/"，并打印 body:
 
 ```rust
 extern crate hyper;
@@ -451,14 +450,14 @@ fn main() {
 }
 ```
 
-但是现在`cargo run`不再工作.
+但是，现在`cargo run`又又又不工作啦.
 
 ```text
 $ cargo run
 `cargo run` requires that a project only have one executable; use the `--bin` option to specify which one to run
 ```
 
-我必须打字`cargo run --bin httptest`启动服务器.我这样做,然后`cargo run --bin client`看到
+我必须输入`cargo run --bin httptest`，启动服务器。这样做之后,运行`cargo run --bin client`,才看到:
 
 ```text
 $ cargo run --bin client
@@ -466,7 +465,7 @@ Running `target/debug/client`
 {"msg":"Hello, World"}
 ```
 
-哦,伙计,我是个锈迹巫师.最后一件事,我想做的是,发出 POST 请求来设置消息.显然要做的是改变`client.get`到[`client.post`](http://hyperium.github.io/hyper/hyper/client/struct.Client.html#method.post). 返回一个[`RequestBuilder`](http://hyperium.github.io/hyper/hyper/client/struct.RequestBuilder.html)因此,我正在寻找设置有效负载的构建器方法.怎么样[`body`](http://hyperium.github.io/hyper/hyper/client/struct.RequestBuilder.html#method.body)?
+哦伙计,看，我是个 Rust 巫师`:P`。最后一件事,我想做的是，发出 POST 请求来设置消息。显然要做的是改`client.get`为[`client.post`](http://hyperium.github.io/hyper/hyper/client/struct.Client.html#method.post)。 这会返回一个[`RequestBuilder`](http://hyperium.github.io/hyper/hyper/client/struct.RequestBuilder.html)，因此,我正在寻找设置有效负载的构建器方法。[`body`](http://hyperium.github.io/hyper/hyper/client/struct.RequestBuilder.html#method.body)怎么样?
 
 我的新创造:
 
@@ -488,7 +487,7 @@ fn main() {
 }
 ```
 
-但是运行它是令人失望的.
+但是运行它是令人失望的
 
 ```text
 101 $ cargo run --bin client
@@ -505,7 +504,7 @@ $ cargo run --bin httptest
 thread '<unnamed>' panicked at 'called `Result::unwrap()` on an `Err` value: ParseError(SyntaxError("invalid syntax", 1, 1))', src/libcore/result.rs:741
 ```
 
-那是因为我错误处理不好!我没有将有效的 JSON 传递给`/set`路线.固定身体`.body(r#"{ "msg": "Just trust the Rust" }"#)`让客户端成功:
+看来，是因为我不好的错误处理! 我没有将有效的 JSON 传递给`/set`路由。修正(fix) **body** 为 `.body(r#"{ "msg": "Just trust the Rust" }"#)`让客户端成功:
 
 ```text
 $ cargo run --bin client
@@ -514,7 +513,7 @@ $ cargo run --bin client
 {"msg":"Just trust the Rust"}
 ```
 
-就像这样,我们在 Rust 中创建了一个 Web 服务和客户端.看来前途不远了.去建立一些东西[熨斗]和[超级].
+就像这样，我们在 Rust 中创建了一个 Web 服务和客户端。看来未来不远了。用[Iron]和[Hyper]去建立一些东西吧。
 
 [crater]: https://github.com/brson/taskcluster-crater
 [rust]: https://github.com/brson/taskcluster-crater
