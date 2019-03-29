@@ -21,10 +21,9 @@
 <!-- repo = 'brson/httptest' -->
 <!-- commit = '1d2b6c9b81bdd6cb3b67be3c9245389462e89426' -->
 <!-- time = '2017-07-04' -->
-
-| 翻译的原文 | 与日期        | 最新更新 | 更多                       |
-| ---------- | ------------- | -------- | -------------------------- |
-| [commit]   | ⏰ 2017-07-04 | ![last]  | [中文翻译][translate-list] |
+翻译的原文 | 与日期 | 最新更新 | 更多
+---|---|---|---
+[commit] | ⏰ 2017-07-04 | ![last] | [中文翻译][translate-list]
 
 [last]: https://img.shields.io/github/last-commit/brson/httptest.svg
 [commit]: https://github.com/brson/httptest/tree/1d2b6c9b81bdd6cb3b67be3c9245389462e89426
@@ -37,7 +36,7 @@
 
 ## 生活
 
-[help me live , live need money 💰](https://github.com/chinanf-boy/live-need-money)
+[If help, **buy** me coffee —— 营养跟不上了，给我来瓶营养快线吧! 💰](https://github.com/chinanf-boy/live-need-money)
 
 ---
 
